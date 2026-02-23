@@ -6,10 +6,11 @@ A standalone production-oriented audit API for reviewing system design documents
 - FastAPI backend on Python 3.11
 - PDF ingestion with `PyPDFLoader` preserving page metadata
 - Persistent local Chroma vector store (`data/chroma`)
-- Token-budgeted retrieval (`<=900` chars/chunk, `<=6000` chars total context)
+- Token-budgeted retrieval (`<=220` chars/chunk quote, `<=6000` chars total context)
 - Triage + targeted/deep module reviewers
 - Deterministic overall scoring and confidence (no LLM scoring merge)
 - Structured JSON logging with request IDs and latency
+- Minimal Streamlit dashboard for demo (`streamlit_app.py`)
 
 ## Project structure
 
@@ -25,6 +26,7 @@ app/
   reviewers.py
   scoring.py
   models.py
+streamlit_app.py
 data/chroma/
 data/uploads/
 requirements.txt
@@ -49,7 +51,7 @@ cp .env.example .env
 # then edit .env with OPENAI_API_KEY and INGEST_TOKEN
 ```
 
-4) Run locally:
+4) Run API locally:
 
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -90,6 +92,23 @@ curl -X POST "http://localhost:8000/analyze" \
   }'
 ```
 
+## Streamlit demo dashboard
+
+Run dashboard:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Demo flow:
+1. Start the API server (`uvicorn ...`).
+2. Open Streamlit UI.
+3. Set API base URL and ingest token in sidebar.
+4. Upload a PDF and click **Ingest PDF**.
+5. Select mode (`triage`, `targeted`, `deep`) and adjust `budget_modules` slider.
+6. Click **Analyze**.
+7. Review overall score/confidence and expand module sections to inspect findings, recommendations, and citations.
+
 ## Modes
 - `triage`: one LLM call that returns high-risk areas, missing info, recommended modules, and questions.
 - `targeted`: triage first, then runs up to `budget_modules` from recommended modules.
@@ -103,6 +122,7 @@ Modules available:
 - Keep `top_k` at 6 (default) unless coverage is low.
 - Use `targeted` mode for cost-efficient iteration.
 - Use `triage` mode first to identify where deep review is needed.
+- Keep quote cap at `220` characters and total context cap at `6000` for predictable spend.
 
 ## Docker
 

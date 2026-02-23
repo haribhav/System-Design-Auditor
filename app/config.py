@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     uploads_dir: Path = Field(default=Path("data/uploads"), alias="UPLOADS_DIR")
     chroma_dir: Path = Field(default=Path("data/chroma"), alias="CHROMA_DIR")
 
-    max_chunk_chars: int = Field(default=900, alias="MAX_CHUNK_CHARS")
+    max_chunk_chars: int = Field(default=220, alias="MAX_CHUNK_CHARS")
     max_context_chars: int = Field(default=6000, alias="MAX_CONTEXT_CHARS")
     default_top_k: int = Field(default=6, alias="DEFAULT_TOP_K")
     default_budget_modules: int = Field(default=3, alias="DEFAULT_BUDGET_MODULES")

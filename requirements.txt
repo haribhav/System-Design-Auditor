@@ -10,3 +10,6 @@ langchain-text-splitters==0.3.2
 chromadb==0.5.23
 pypdf==5.1.0
 pydantic-settings==2.6.1
+
+streamlit==1.40.2
+requests==2.32.3
